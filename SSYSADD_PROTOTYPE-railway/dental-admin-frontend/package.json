@@ -1,0 +1,11 @@
+{
+  "name": "dental-admin-frontend",
+  "version": "1.0.0",
+  "description": "Static admin/staff console for the AI-Assisted Dental Clinic Management System prototype",
+  "scripts": {
+    "start": "serve -s . -l $PORT"
+  },
+  "dependencies": {
+    "serve": "^14.2.3"
+  }
+}

@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DentalOS \u2014 Patient Portal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+<div class="page">
+  <header class="topbar">
+    <div class="brand"><span class="mark">D</span> DentalOS</div>
+    <div class="topbar-sub" id="topbar-sub">Patient Portal</div>
+    <button class="logout-link" id="logout-link" onclick="logout()" style="display:none;">Sign out</button>
+  </header>
+
+  <main class="wrap">
+
+    <!-- ===================== LOGIN VIEW ===================== -->
+    <div id="view-login" class="auth-view">
+      <div class="intro">
+        <h1>Welcome back</h1>
+        <p>Log in to book an appointment or check your visit history.</p>
+      </div>
+      <div class="card">
+        <div class="alert error" id="login-error"></div>
+        <div class="field">
+          <label for="login-email">Email</label>
+          <input id="login-email" type="email" placeholder="">
+        </div>
+        <div class="field">
+          <label for="login-password">Password</label>
+          <input id="login-password" type="password" placeholder="">
+        </div>
+        <button class="submit-btn" onclick="doLogin()">Log In</button>
+        <p class="switch-link">New here? <a href="#" onclick="showView('register'); return false;">Create an account</a></p>
+      </div>
+    </div>
+
+    <!-- ===================== REGISTER VIEW ===================== -->
+    <div id="view-register" class="auth-view" style="display:none;">
+      <div class="intro">
+        <h1>Create your account</h1>
+        <p>Just enough to book you in and keep track of your visits.</p>
+      </div>
+      <div class="card">
+        <div class="alert error" id="register-error"></div>
+        <div class="field">
+          <label for="reg-name">Full Name</label>
+          <input id="reg-name" type="text" placeholder="">
+        </div>
+        <div class="form-row">
+          <div class="field">
+            <label for="reg-contact">Contact Number</label>
+            <input id="reg-contact" type="text" placeholder="">
+          </div>
+          <div class="field">
+            <label for="reg-email">Email</label>
+            <input id="reg-email" type="email" placeholder="">
+          </div>
+        </div>
+        <div class="field">
+          <label for="reg-password">Password</label>
+          <input id="reg-password" type="password" placeholder="">
+        </div>
+        <button class="submit-btn" onclick="doRegister()">Create Account</button>
+        <p class="switch-link">Already have an account? <a href="#" onclick="showView('login'); return false;">Log in</a></p>
+      </div>
+    </div>
+
+    <!-- ===================== BOOKING VIEW ===================== -->
+    <div id="view-booking" class="auth-view" style="display:none;">
+      <div class="intro">
+        <h1>Book an appointment</h1>
+        <p id="welcome-line">Pick a date and an open time \u2014 we'll confirm right away.</p>
+      </div>
+
+      <div class="tab-row">
+        <button class="tab-btn active" id="tab-book" onclick="switchTab('book')">Book a Visit</button>
+        <button class="tab-btn" id="tab-history" onclick="switchTab('history')">My Appointments</button>
+      </div>
+
+      <div class="card" id="panel-book">
+        <div class="step-banner" id="conn-banner" style="display:none;">
+          Can't reach the clinic system right now. Make sure the backend server is running, then refresh.
+        </div>
+        <div class="alert error" id="form-error"></div>
+        <div class="alert success" id="form-success"></div>
+
+        <form id="booking-form">
+          <div class="field">
+            <label for="pt-date">Date</label>
+            <input id="pt-date" type="date" required>
+          </div>
+          <div class="field">
+            <label for="reason">Reason for Visit</label>
+            <input id="reason" type="text" placeholder="e.g. Regular Checkup & Cleaning" required>
+          </div>
+          <div class="field">
+            <label>Available Time Slots</label>
+            <div class="slot-grid" id="slot-grid">
+              <div class="slot-loading">Loading available times\u2026</div>
+            </div>
+          </div>
+          <button type="submit" class="submit-btn" id="submit-btn" disabled>Confirm Booking</button>
+        </form>
+      </div>
+
+      <div class="card" id="panel-history" style="display:none;">
+        <div id="history-list"><div class="slot-loading">Loading your appointments\u2026</div></div>
+      </div>
+    </div>
+
+    <p class="footnote">AI-Assisted Dental Clinic Management System \u2014 Patient Booking Portal</p>
+  </main>
+</div>
+
+<div class="modal-backdrop" id="confirm-modal">
+  <div class="modal">
+    <div class="modal-icon">\u2713</div>
+    <h2>You're booked!</h2>
+    <p id="confirm-details"></p>
+    <button class="submit-btn" onclick="closeConfirm()">Done</button>
+  </div>
+</div>
+
+<script src="config.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DentalOS — Staff Console</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+<!-- ===================== LOGIN SCREEN ===================== -->
+<div id="login-screen">
+  <div class="login-side">
+    <div class="brand"><span>D</span> DentalOS</div>
+    <div class="login-pitch">
+      <h1>Run the front desk without the chaos.</h1>
+      <p>Today's schedule, patient records, and walk-in bookings — all in one place, synced live with online patient bookings.</p>
+    </div>
+    <div class="login-footnote">AI-Assisted Dental Clinic Management System — Staff Console</div>
+  </div>
+  <div class="login-form-wrap">
+    <div class="login-card">
+      <h2>Staff sign in</h2>
+      <p class="sub">Log in to manage today's schedule and patient records.</p>
+      <div class="login-error" id="login-error">Incorrect username or password.</div>
+      <div class="field">
+        <label for="username">Username</label>
+        <input id="username" type="text" placeholder="secretary">
+      </div>
+      <div class="field">
+        <label for="password">Password</label>
+        <input id="password" type="password" placeholder="">
+      </div>
+      <button class="login-btn" onclick="attemptLogin()">Log In</button>
+      <div class="login-hint">Prototype login — username <strong>secretary</strong>, password <strong>clinic123</strong>.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== APP SCREEN ===================== -->
+<div id="app-screen">
+  <div class="shell">
+    <aside class="sidebar">
+      <div class="side-logo">
+        <div class="mark">D</div>
+        <div class="logo-word">DentalOS</div>
+      </div>
+      <div class="nav-item active" data-view="dashboard" onclick="switchView('dashboard')">Today's Schedule</div>
+      <div class="nav-item" data-view="records" onclick="switchView('records')">Patient Records</div>
+      <div class="side-foot">
+        <div class="side-user">
+          <div class="side-avatar">SC</div>
+          <div>
+            <div class="side-user-name">Secretary</div>
+            <div class="side-user-role">Front Desk</div>
+          </div>
+        </div>
+        <button class="logout-btn" onclick="logout()">Sign out</button>
+      </div>
+    </aside>
+
+    <main class="main">
+      <div class="topbar">
+        <div class="search-box">
+          <input id="global-search" type="text" placeholder="Search patients by name or ID…" oninput="handleGlobalSearch()">
+        </div>
+        <button class="primary-btn" onclick="openBookingModal()">+ New Appointment</button>
+      </div>
+
+      <!-- ---------- Dashboard / Today's Schedule ---------- -->
+      <div id="view-dashboard" class="view active">
+        <h1 class="view-title">Today's Schedule</h1>
+        <p class="view-sub" id="today-date-label">—</p>
+        <div class="card">
+          <div class="schedule-list" id="schedule-list"></div>
+        </div>
+      </div>
+
+      <!-- ---------- Patient Records ---------- -->
+      <div id="view-records" class="view">
+        <h1 class="view-title">Patient Records</h1>
+        <p class="view-sub" id="records-count-label">— patients on file</p>
+        <div class="card">
+          <table class="records">
+            <thead>
+              <tr>
+                <th>Patient</th>
+                <th>Last Visit</th>
+                <th>Next Visit</th>
+                <th>Status</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="records-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<!-- ===================== BOOKING MODAL ===================== -->
+<div class="modal-backdrop" id="booking-modal">
+  <div class="modal wide">
+    <div class="modal-head">
+      <h3>Book Appointment</h3>
+      <button class="modal-close" onclick="closeModal('booking-modal')">&times;</button>
+    </div>
+    <div class="modal-error" id="booking-error"></div>
+
+    <div class="toggle-group">
+      <button id="toggle-existing" class="active" onclick="setPatientType('existing')">Existing Patient</button>
+      <button id="toggle-new" onclick="setPatientType('new')">New Patient</button>
+    </div>
+
+    <div id="existing-patient-field" class="field">
+      <label for="patient-select">Patient</label>
+      <select id="patient-select"></select>
+    </div>
+    <div id="new-patient-field" class="field" style="display:none;">
+      <label for="new-patient-name">New Patient Name</label>
+      <input id="new-patient-name" type="text" placeholder="Full name">
+    </div>
+
+    <div class="form-row">
+      <div class="field">
+        <label for="appt-date">Date</label>
+        <input id="appt-date" type="date">
+      </div>
+      <div class="field">
+        <label for="appt-time">Time</label>
+        <select id="appt-time">
+          <option>9:00 AM</option>
+          <option>10:00 AM</option>
+          <option>11:00 AM</option>
+          <option>1:00 PM</option>
+          <option>2:00 PM</option>
+          <option>3:00 PM</option>
+          <option>4:00 PM</option>
+        </select>
+      </div>
+    </div>
+    <div class="field">
+      <label for="appt-reason">Reason for Visit</label>
+      <input id="appt-reason" type="text" placeholder="e.g. Regular Checkup & Cleaning">
+    </div>
+
+    <div class="modal-actions">
+      <button class="ghost-btn" onclick="closeModal('booking-modal')">Cancel</button>
+      <button class="primary-btn" onclick="confirmBooking()">Confirm Booking</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== PATIENT PROFILE MODAL ===================== -->
+<div class="modal-backdrop" id="profile-modal">
+  <div class="modal">
+    <div class="modal-head">
+      <h3 id="profile-name">—</h3>
+      <button class="modal-close" onclick="closeModal('profile-modal')">&times;</button>
+    </div>
+    <div class="profile-section">
+      <div class="label">Contact</div>
+      <div class="value" id="profile-contact">—</div>
+    </div>
+    <div class="profile-section">
+      <div class="label">Status</div>
+      <div class="value" id="profile-status">—</div>
+    </div>
+    <div class="profile-section">
+      <div class="label">Dental History</div>
+      <div class="value" id="profile-dental">—</div>
+    </div>
+    <div class="profile-section">
+      <div class="label">Medical Notes</div>
+      <div class="value" id="profile-medical">—</div>
+    </div>
+    <div class="modal-actions">
+      <button class="ghost-btn" onclick="closeModal('profile-modal')">Close</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="config.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
